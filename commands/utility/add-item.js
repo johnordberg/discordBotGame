@@ -14,14 +14,20 @@ const inventory_functions = require('../../helper_functions/inventory_functions.
 module.exports = {
     category: 'utility',
 	data: new SlashCommandBuilder()
-		.setName('view-inventory')
-		.setDescription('View your Inventory'),
+		.setName('add-item')
+		.setDescription('Add an item directly to your inventory')
+        .addStringOption(option =>
+			option.setName('item')
+				.setDescription('The Item to add.')
+				.setRequired(true)),
 	async execute(interaction) {
+        const itemName = interaction.options.getString('item', true);
 		const target = interaction.options.getUser('user') ?? interaction.user;
-        const items = await inventory_functions.getItems(target.id);
 
-        if (!items.length) return interaction.reply(`${target.tag} has nothing!`);
+        var item = await inventory_functions.getItemByName(itemName);
 
-        await interaction.reply(`${target.tag} currently has ${items.map(i => `${i.amount} ${i.item.name}`).join(', ')}`);
+        await inventory_functions.addItem(target.id, item.id);
+
+        await interaction.reply(`added ${item.name} to ${target.tag}'s inventory`);
 	},
 };
