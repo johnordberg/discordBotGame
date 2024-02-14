@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const currency_functions = require('../../helper_functions/currency_functions.js');
 
-
 module.exports = {
     category: 'utility',
 	data: new SlashCommandBuilder()

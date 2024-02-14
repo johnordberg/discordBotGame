@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const currency_functions = require('../../helper_functions/currency_functions.js');
 
 module.exports = {
-    category: 'utility',
+    category: 'inventory',
 	data: new SlashCommandBuilder()
 		.setName('view-balance')
 		.setDescription('View your balance'),

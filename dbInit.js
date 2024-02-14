@@ -10,6 +10,12 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 const CurrencyShop = require('./models/currencyShop.js')(sequelize, Sequelize.DataTypes);
 require('./models/users.js')(sequelize, Sequelize.DataTypes);
 require('./models/userItems.js')(sequelize, Sequelize.DataTypes);
+const Quests = require('./models/questLocations.js')(sequelize, Sequelize.DataTypes);
+require('./models/characters.js')(sequelize, Sequelize.DataTypes);
+require('./models/enemies.js')(sequelize, Sequelize.DataTypes);
+require('./models/interactables.js')(sequelize, Sequelize.DataTypes);
+
+const room_creation_functions = require('./helper_functions/room_creation_functions.js');
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
@@ -18,6 +24,7 @@ sequelize.sync({ force }).then(async () => {
 		CurrencyShop.upsert({ name: 'Tea', cost: 1 }),
 		CurrencyShop.upsert({ name: 'Coffee', cost: 2 }),
 		CurrencyShop.upsert({ name: 'Cake', cost: 5 }),
+		Quests.upsert(room_creation_functions.generateHqMapData())
 	];
 
 	await Promise.all(shop);

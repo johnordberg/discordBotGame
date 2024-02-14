@@ -1,18 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const Sequelize = require('sequelize');
-
-const sequelize = new Sequelize('database', 'username', 'password', {
-	host: 'localhost',
-	dialect: 'sqlite',
-	logging: false,
-	storage: 'database.sqlite',
-});
-
-const { Users } = require('../../dbObjects.js');
 const inventory_functions = require('../../helper_functions/inventory_functions.js');
 
 module.exports = {
-    category: 'utility',
+    category: 'inventory',
 	data: new SlashCommandBuilder()
 		.setName('view-inventory')
 		.setDescription('View your Inventory'),
