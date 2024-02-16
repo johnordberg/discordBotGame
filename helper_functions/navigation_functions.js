@@ -20,4 +20,43 @@ async function getPlayerRoom(x,y,location){
     return questData[roomIndex];
 }
 
-module.exports = { getPlayerCoords, getPlayerLocation, getPlayerRoom };
+async function movePlayerDirection(id, direction){
+    var user = await Users.findOne({where: { user_id: id } });
+    var quest = await QuestLocations.findOne({where: { quest_name: user.current_location } });
+
+    if (direction == "north"){
+        if (quest.quest_layout.room_layout[user.y_coord - 1][user.x_coord] != 0){
+            user.y_coord -= 1 ;
+            user.save();
+            return true;
+        }
+    }
+
+    else if (direction == "south"){
+        if (quest.quest_layout.room_layout[user.y_coord + 1][user.x_coord] != 0){
+            user.y_coord += 1 ;
+            user.save();
+            return true;
+        }
+    }
+
+    else if (direction == "east"){
+        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord - 1] != 0){
+            user.x_coord -= 1 ;
+            user.save();
+            return true;
+        }
+    }
+
+    else if (direction == "west"){
+        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord + 1] != 0){
+            user.x_coord += 1 ;
+            user.save();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+module.exports = { getPlayerCoords, getPlayerLocation, getPlayerRoom, movePlayerDirection };
