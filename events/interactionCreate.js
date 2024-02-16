@@ -1,10 +1,33 @@
 const Sequelize = require('sequelize');
 const { Events, Collection, GatewayIntentBits } = require('discord.js');
+const { Users, CurrencyShop, UserItems, QuestLocations, Characters, Enemies, Interactables } = require('../dbObjects.js');
 
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		if (!interaction.isChatInputCommand()) return;
+
+		const client = interaction.options.getUser('user') ?? interaction.user;
+		var user = await Users.findOne({where: { user_id: client.id } });
+		if (user) {
+			
+		}
+		else{
+			const newUser = await Users.create({ 
+				user_id: client.id,
+				balance: 0,
+				current_location: "Dipshit HQ",
+				x_coord: 1,
+				y_coord:  4,
+				xp: 0,
+				level: 1,
+				max_hp: 10,
+				hp: 10,
+				game_state: "intro",
+				status_effects: {}
+			});
+			Users.upsert(id, newUser);
+		}
 
 		const command = interaction.client.commands.get(interaction.commandName);
 

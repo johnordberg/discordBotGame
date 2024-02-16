@@ -14,8 +14,10 @@ async function getPlayerLocation(id){
 
 async function getPlayerRoom(x,y,location){
     var quest = await QuestLocations.findOne({where: { quest_name: location } });
-    var questData = quest.questLayout.room_data;
-    
+    var questData = quest.quest_layout.room_data;
+    var questMap = quest.quest_layout.room_layout;
+    var roomIndex = questMap[y][x];
+    return questData[roomIndex];
 }
 
-module.exports = { getPlayerCoords, getPlayerLocation };
+module.exports = { getPlayerCoords, getPlayerLocation, getPlayerRoom };
