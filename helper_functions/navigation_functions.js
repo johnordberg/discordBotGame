@@ -1,6 +1,7 @@
-const { Collection } = require('discord.js');
+const { Collection, bold, italic, strikethrough, underscore, spoiler, quote, blockQuote } = require('discord.js');
 const currency = new Collection();
 const { Users, CurrencyShop, UserItems, QuestLocations, Characters, Enemies, Interactables } = require('../dbObjects.js');
+
 
 async function getPlayerCoords(id){
     var user = await Users.findOne({where: { user_id: id } });
@@ -41,16 +42,16 @@ async function movePlayerDirection(id, direction){
     }
 
     else if (direction == "east"){
-        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord - 1] != 0){
-            user.x_coord -= 1 ;
+        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord + 1] != 0){
+            user.x_coord += 1 ;
             user.save();
             return true;
         }
     }
 
     else if (direction == "west"){
-        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord + 1] != 0){
-            user.x_coord += 1 ;
+        if (quest.quest_layout.room_layout[user.y_coord][user.x_coord - 1] != 0){
+            user.x_coord -= 1 ;
             user.save();
             return true;
         }
@@ -59,4 +60,51 @@ async function movePlayerDirection(id, direction){
     return false;
 }
 
-module.exports = { getPlayerCoords, getPlayerLocation, getPlayerRoom, movePlayerDirection };
+async function getRoomInDirection(id, direction){
+    var user = await Users.findOne({where: { user_id: id } });
+    var quest = await QuestLocations.findOne({where: { quest_name: user.current_location } });
+
+    if (direction == "north"){
+        var roomIndex = quest.quest_layout.room_layout[user.y_coord - 1][user.x_coord];
+        if (roomIndex != 0){
+            return "To the north is a room labled: " + bold(quest.quest_layout.room_data[roomIndex].name);
+        }
+        else{
+            return "There is nothing to the north.";
+        }
+    }
+
+    if (direction == "south"){
+        var roomIndex = quest.quest_layout.room_layout[user.y_coord + 1][user.x_coord];
+        if (roomIndex != 0){
+            return "To the south is a room labled: " + bold(quest.quest_layout.room_data[roomIndex].name);
+        }
+        else{
+            return "There is nothing to the south.";
+        }
+    }
+
+    if (direction == "east"){
+        var roomIndex = quest.quest_layout.room_layout[user.y_coord][user.x_coord + 1];
+        if (roomIndex != 0){
+            return "To the east is a room labled: " + bold(quest.quest_layout.room_data[roomIndex].name);
+        }
+        else{
+            return "There is nothing to the east.";
+        }
+    }
+
+    if (direction == "west"){
+        var roomIndex = quest.quest_layout.room_layout[user.y_coord][user.x_coord - 1];
+        if (roomIndex != 0){
+            return "To the west is a room labled: " + bold(quest.quest_layout.room_data[roomIndex].name);
+        }
+        else{
+            return "There is nothing to the west.";
+        }
+    }
+
+    return false;
+}
+
+module.exports = { getPlayerCoords, getPlayerLocation, getPlayerRoom, movePlayerDirection, getRoomInDirection };

@@ -26,7 +26,7 @@ module.exports = {
 				game_state: "intro",
 				status_effects: {}
 			});
-			Users.upsert(id, newUser);
+			Users.upsert(client.id, newUser);
 		}
 
 		const command = interaction.client.commands.get(interaction.commandName);
